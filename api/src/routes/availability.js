@@ -5,11 +5,11 @@ const availability = Router();
 
 // HANDLERS //
 
-const handlerCheckAvailability = require("../controllers/checkAvailabilityController.js");
+const checkAvailabilityController = require("../controllers/checkAvailabilityController.js");
 
 // ROUTES //
 
-availability.get("/availability/:day", handlerCheckAvailability);
+availability.get("/availability/:day", checkAvailabilityController);
 
 // EXPORTACION DE RUTAS //
 module.exports = availability;
