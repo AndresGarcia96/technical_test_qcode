@@ -1,6 +1,6 @@
 const calculateAvailableSpaces = require("../services/checkAvailabilityService");
 
-const handlerCheckAvailability = async (req, res) => {
+const checkAvailabilityService = async (req, res) => {
   try {
     const { day } = req.params;
 
@@ -11,4 +11,4 @@ const handlerCheckAvailability = async (req, res) => {
   }
 };
 
-module.exports = handlerCheckAvailability;
+module.exports = checkAvailabilityService;
