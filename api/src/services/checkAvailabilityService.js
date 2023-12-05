@@ -29,16 +29,39 @@ const calculateAvailableSpaces = async (day) => {
     (quote) => quote.Day.toLowerCase() === day.toLowerCase()
   );
 
-  const busyMinutes = quotesOfTheDay.reduce(
-    (total, quote) => total + parseInt(quote.Duration),
-    0
-  );
+  quotesOfTheDay.sort((a, b) => {
+    if (a.Hour === b.Hour) {
+      return 0;
+    }
+    return a.Hour < b.Hour ? -1 : 1;
+  });
 
-  const availableMinutes = MINUTES_PER_DAY - busyMinutes; // 8 horas = 480 minutos
+  let availableMinutes = MINUTES_PER_DAY;
 
-  const spacesAvailable = Math.floor(availableMinutes / MIN_MINUTES_PER_QUOTE);
+  for (let i = 1; i < quotesOfTheDay.length; i++) {
+    const currentQuote = quotesOfTheDay[i];
+    const previousQuote = quotesOfTheDay[i - 1];
 
-  return spacesAvailable;
+    const currentStartTime = convertHourToMinutes(currentQuote.Hour);
+    const previousEndTime =
+      convertHourToMinutes(previousQuote.Hour) +
+      parseInt(previousQuote.Duration);
+
+    const gap = currentStartTime - previousEndTime;
+
+    if (gap < MIN_MINUTES_PER_QUOTE) {
+      availableMinutes -= parseInt(currentQuote.Duration);
+    } else {
+      availableMinutes -= gap;
+    }
+  }
+
+  return Math.floor(availableMinutes / MIN_MINUTES_PER_QUOTE);
+};
+
+const convertHourToMinutes = (hour) => {
+  const [hourPart, minutePart] = hour.split(":");
+  return parseInt(hourPart) * 60 + parseInt(minutePart);
 };
 
 module.exports = calculateAvailableSpaces;
